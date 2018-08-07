@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0" name="viewport">
+<title>HereDoc</title>
+<link href="__STATIC__/layui/css/layui.css" media="all" rel="stylesheet" />
+<link href="__STATIC__/heredoc/css/show.css" media="all" rel="stylesheet" />
+<link rel="stylesheet" href="__STATIC__/editor/css/editormd.css" />
+<link rel="stylesheet" type="text/css" href="__STATIC__/fonts/iconfont.css">
+</head>
+<body>
+  <style type="text/css">
+    .layui-layer-title {
+    padding: 10px 80px 0 20px !important;
+    border-bottom: none !important;
+    font-size: 20px !important;
+    background-color: #fff !important;
+}
+.item-share-address{
+  margin:30px 15px 15px 15px;
+  line-height: 25px;
+  position:relative;
+}
+.item-share-address span{
+    color:#333;
+}
+.share-copy{
+   position:absolute;
+   bottom:10px;
+   right:10px;
+   color:#409eff;
+   font-size:12px;
+   cursor:pointer;
+}
+</style>
+<div class="hbb">
+   <div class="show-left">
+        <div class="show-left-top">
+            <div class="show-left-top-search">
+               <form class="layui-form" action="">
+                  <input name="title" lay-verify="title" autocomplete="off" placeholder="请输入文件名" class="layui-input" type="text">
+                </form>
+            </div>
+            <div class="shwo-left-top-add">
+              {if condition="$readonly != 1"}
+                 <div class="add-icon">
+						<a href="{:url('Docs/docsAdd',['id'=>$id])}"><i class="layui-icon layui-icon-add-1 tips" tips-top="52px" tips-left="160px" tips-fx="tips-trin-left" data-info="添加项目"></i></a>
+						<a href="{:url('Cate/docs',['id'=>$id])}"><i class="iconfont icon-wenjianjia tips" tips-top="52px" tips-left="345px" tips-fx="tips-trin-right" data-info="新建目录/文件夹"></i></a>
+                 </div>
+                 {/if}
+            </div>
+        </div>
+        <div class="show-left-nav">
+            <ul class="layui-nav layui-nav-tree layui-inline" lay-filter="demo" style="margin-right: 10px;">
+            	{foreach name="cate" item="vo"}
+            	  {if condition="$vo['is_doc'] == 1"}
+            	{if condition="in_array($vo['id'] , $ids)"}
+			  	<li class="layui-nav-item layui-nav-itemed">
+			  	{else /}
+			  	<li class="layui-nav-item">
+			  	{/if}
+				    <a href="javascript:;"><i class="iconfont icon-wenjianjia" style="font-size:20px;margin-right:10px;"></i>  {$vo.name}</a>
+				    {if condition="!empty($vo['docs'])"}
+				    <dl class="layui-nav-child">
+				    	{foreach name="$vo['docs']" item="vv"}
+					      <dd  class="{$page_id == $vv['id'] ?'layui-this':''}"><a href="{:url('Cate/index',['id'=>$id,'page_id'=>$vv['id']])}"><i class="iconfont" style="font-size:20px;margin-right:45px;"></i>{$vv.title}</a></dd>
+					     {/foreach}
+				    </dl>
+				    {/if}
+			  	</li>
+			  	{else /}
+			  	<li class="layui-nav-item layui-nav-item-one {$page_id == $vo['docs'] ?'layui-this':''}"><a href="{:url('Cate/index',['id'=>$id,'page_id'=>$vo['docs']])}"><i class="iconfont" style="font-size:20px;margin-right:30px;"></i> {$vo['name']}</a></li>
+			  	{/if}
+			  	{/foreach}
+			</ul>
+        </div>
+   </div>
+   <div class="show-right">
+       <div class="show-container">
+       	  <div class="show-header">
+              <div class="header-left"><i class="iconfont icon-more"></i></div>
+              {if condition="$readonly != 1"}
+              <div class="header-right drop-down-hover" data-info="v123">
+                 <span>项目<i class="layui-icon layui-icon-down" style="font-size:12px;margin-left:5px;"></i>
+                 </span>
+                <ul class="drop-down-target drop-down-xm min-width-60" data-info-v123="">
+                  <div class="left-trin"></div>
+                   <li><a href="javascript:void(0)" onclick="shareItem($(this))">分享</a></li>
+                   <li><a href="javascript:void(0)" onclick="exportCate($(this))">导出</a></li>
+                   <li><a href="{:url('Item/set',['id'=>$id])}">项目设置</a></li>
+                   <li><a href="{:url('Index/index')}">返回</a></li>
+                </ul>                      
+              </div>
+              {/if}
+              <div class="clear"></div>
+       	  </div>
+          <div class="show-content">
+              <div id="test-editormd-view">
+				<h2 class="content-title">{$doc.title}</h2>      	            	
+                <textarea  name="test-editormd-markdown-doc" style="display:none">{$doc.content}</textarea> 
+              </div>
+              {if condition="$readonly != 1 && $docs_auth == 1"}
+              <div class="right-bar">
+                 <ul class="right-bar-ul">
+                    <li class="right-bar-li tips" tips-top="155px" tips-right="80px" tips-fx="tips-trin-left" data-info="编写项目"><a href="{:url('Docs/docsEdit',['id'=>$page_id])}"><i class="iconfont icon-bianji"></i></a></li>
+                    <li class="right-bar-li tips" onclick="shareItem2($(this))" tips-top="190px" tips-right="80px" tips-fx="tips-trin-left" data-info="分享项目"><i class="layui-icon layui-icon-share"></i></li>
+                    <li class="right-bar-li drop-down-hover" data-info="v124">
+                      <i class="layui-icon layui-icon-down"></i>
+                      <ul class="drop-down-target drop-down-fx min-width-40" data-info-v124="">
+                        <div class="left-trin"></div>
+                         <li ><a href="{:url('Docs/docsCopy',['id'=>$page_id])}">复制</a></li>
+                         <li><a href="{:url('Cate/exportDoc',['id'=>$id,'page_id'=>$page_id])}">导出</a></li>
+                         <li><a href="{:url('Docs/docsDel')}" class="delRed" data-id="{$page_id}">删除</a></li>
+                      </ul>                       
+                    </li>
+                 </ul>
+              </div>
+              {/if}
+          </div>
+       </div>
+      <div class="tag-tips">
+           <span>复制项目</span>
+           <div class="tips-trin"></div>
+      </div>           
+   </div>	
+</div>
+<script charset="utf-8" src="__STATIC__/layui/layui.js"></script> 
+<script src="https://cdn.bootcss.com/jquery/2.2.3/jquery.min.js"></script>
+<script src="__STATIC__/editor/lib/marked.min.js"></script>
+<script src="__STATIC__/editor/lib/prettify.min.js"></script>
+<script src="__STATIC__/editor/lib/raphael.min.js"></script>
+<script src="__STATIC__/editor/lib/underscore.min.js"></script>
+<script src="__STATIC__/editor/lib/sequence-diagram.min.js"></script>
+<script src="__STATIC__/editor/lib/flowchart.min.js"></script>
+<script src="__STATIC__/editor/lib/jquery.flowchart.min.js"></script>
+<script src="__STATIC__/editor/editormd.js"></script> 
+<script type="text/javascript" src="__STATIC__/heredoc/js/jquery.form.js"></script>
+<script type="text/javascript" src="__STATIC__/heredoc/js/heredoc.js"></script>    
+<script>
+	layui.use(['element','layer'], function(){
+	  var element = layui.element,
+	  layer = layui.layer
+	});
+  flag = true;
+  $('.icon-more').click(function(){
+     if(flag){
+        $('.show-left').animate({"width":"0px"})
+        $('.show-right').animate({"margin-left":"0"})
+        flag = false
+     }else{
+        $('.show-left').animate({"width":"350px"})
+        $('.show-right').animate({"margin-left":"350"})    
+        flag = true     
+     }
+     
+  })
+      function shareItem(that){
+               url = "{:url('Share/index',['id'=>$id])}"
+               domain = "<?php echo request()->domain();?>"
+                  layer.open({
+                    type: 1 //Page层类型
+                    ,area: ['300px', '200px']
+                    ,title: '项目分享'
+                    ,shade: 0.6 //遮罩透明度
+                    ,maxmin: true //允许全屏最小化
+                    ,anim: 1 //0-6的动画形式，-1不开启
+                    ,content:  `<div class="item-share-address">项目地址：<span>`+domain+url+`</span></div>
+                          <div class="share-copy">复制链接</div>
+                     `
+                  });       
+        }
+        function shareItem2(that){
+               url = "{:url('Share/index',['id'=>$id])}"
+               url2 = "{:url('Share/index',['id'=>$id,'page_id'=>$page_id])}"
+               domain = "<?php echo request()->domain();?>"
+                  layer.open({
+                    type: 1 //Page层类型
+                    ,area: ['300px', '250px']
+                    ,title: '项目分享'
+                    ,shade: 0.6 //遮罩透明度
+                    ,maxmin: true //允许全屏最小化
+                    ,anim: 1 //0-6的动画形式，-1不开启
+                    ,content:  `<div class="item-share-address">项目地址：<span>`+domain+url+`</span></div>
+                                <div class="item-share-address">单页地址：<span>`+domain+url2+`</span></div>
+                          <div class="share-copy">复制链接</div>
+                     `
+                  });       
+        }
+        function exportCate(that){   
+                                                       
+                url = "{:url('Cate/ajaxGetExportCate')}"
+                id = "{$id}"
+                $.post(url,{id:id},function(data){
+                  layer.open({
+                      type: 1 //Page层类型
+                      ,area: ['400px', '300px']
+                      ,title: '项目分享'
+                      ,shade: 0.6 //遮罩透明度
+                      ,maxmin: true //允许全屏最小化
+                      ,anim: 1 //0-6的动画形式，-1不开启
+                      ,content:data
+                  });                          
+                  layui.use('form', function(){
+                     var form = layui.form;
+                     form.render();
+                  }); 
+                },'json')       
+        }
+  $(document).on('click','.close',function(){
+        layer.closeAll();
+  })
+$('.drop-down-hover').mouseover(function(){
+  if (!$(".drop-down-target["+info+"]")) { 
+      data = $(this).attr('data-info');
+     info = `data-info-`+data
+    if (!$(".drop-down-target["+info+"]").is(':animated')) { 
+         $(".drop-down-target["+info+"]").fadeIn()
+      }
+    }
+  }).mouseleave(function(){
+      data = $(this).attr('data-info');
+     info = `data-info-`+data
+       $(".drop-down-target["+info+"]").hide()
+  })
+$(".tips").mouseover(function(){
+  if (!$('.tag-tips').is(':animated')) { 
+    $('.tag-tips').css({
+            'top':'',
+            'right':'',
+            'left':''
+      }) 
+      $('.tag-tips').find('.tips-trin').removeClass("tips-trin-right") 
+      $('.tag-tips').find('.tips-trin').removeClass("tips-trin-left")        
+       tops = $(this).attr('tips-top')
+       left = $(this).attr('tips-left')
+       right = $(this).attr('tips-right')
+       info = $(this).data('info')
+       fx = $(this).attr('tips-fx');
+       $('.tag-tips').find('.tips-trin').addClass(fx)
+       if(left){
+          $('.tag-tips').css({
+            'top':tops,
+            'left':left
+          })
+       }else if(right){
+        $('.tag-tips').css({
+            'top':tops,
+            'right':right
+          })         
+       }
+       
+       $('.tag-tips').find('span').html(info)
+       $('.tag-tips').fadeIn()
+     }
+}).mouseleave(function(){
+     $('.tag-tips').hide()
+});
+testEditormdView2 = editormd.markdownToHTML("test-editormd-view", 
+   { htmlDecode : "style,script,iframe", // you can filter tags decode 
+    emoji : true, 
+   taskList : true, 
+   tex : true, // 默认不解析 
+   flowChart : true, // 默认不解析 
+   sequenceDiagram : true, // 默认不解析 
+});
+</script>
+</body>
+</html>

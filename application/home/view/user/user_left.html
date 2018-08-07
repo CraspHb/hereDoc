@@ -1,0 +1,63 @@
+<link href="__STATIC__/fontAwesome/css/font-awesome.min.css" rel="stylesheet">
+<div class="user-top">
+	  <div class="user-img"><img src="{$userinfo['pic']|get_avatar}" class="face-img" alt=""></div>
+	  <div class="user-name">{$userinfo.username}<i class="fa fa-mars"></i></div>
+  <div class="user-icon">
+      <span><i class="layui-icon">&#xe735;</i><a style="color:#4EBBF9">{$members}</a></span>
+      <span><i class="layui-icon">&#xe60e;</i>{$userinfo.addtime|date="Y-m-d",###}</span>
+      <span><i class="layui-icon">&#xe609;</i>{$my}</span>
+  </div>
+  <div class="user-info">（{$userinfo.info ? $userinfo.info : "这个人懒得留下签名"}）</div>
+</div>
+<div class="user-bot">
+<div class="user-list">
+    <a href="{:url('User/index')}"><i class="fa fa-home"></i><span>我的主页</span></a>
+</div>
+ <div class="user-list">
+    <a href="{:url('User/myItem')}"><i class="fa fa-bookmark"></i><span>我的项目</span></a>
+</div>                          
+ <div class="user-list">
+    <a href="{:url('User/partItem')}"><i class="fa fa-comments"></i><span>参与项目</span></a>
+</div>                                               
+ <div class="user-list">
+    <a href="{:url('User/set')}"><i class="fa fa-gear"></i><span>设置资料</span></a>
+</div>                          
+ <div class="user-list">
+    <a href="{:url('Login/logout')}"><i class="fa fa-sign-out"></i><span>退出登录</span></a>
+</div>                          
+</div>
+<script src="__STATIC__/layui/layui.js" type="text/javascript" charset="utf-8"></script>
+<script src="__STATIC__/editor/examples/js/jquery.min.js"></script> 
+<script type="text/javascript">
+layui.use(['layer','element','upload','form'], function(){
+  var $ = layui.jquery
+  ,upload = layui.upload
+   ,form = layui.form
+  ,layer = layui.layer
+  ,element = layui.element  
+  
+  //普通图片上传
+     var uploadInst = upload.render({
+	    elem: '.user-img'
+		,url: "{:url('User/setPic')}"
+	    ,before: function(obj){
+	      //预读本地文件示例，不支持ie8
+	      obj.preview(function(index, file, result){
+	        $('.face-img').attr('src', result); //图片链接（base64）
+	      });
+	    }
+	    ,done: function(res){
+	      //如果上传失败
+	      if(res.code == 0){
+	        return layer.msg('上传失败');
+	      }else{
+	      	  return layer.msg('上传成功');
+	      }
+	      //上传成功
+	    }
+	    ,error: function(){
+	      return layer.msg('上传失败');
+	    }
+	  });
+})
+</script>

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0" name="viewport">
+<title>HereDoc</title>
+<link href="__STATIC__/layui/css/layui.css" media="all" rel="stylesheet" />
+<link href="__STATIC__/heredoc/css/show.css" media="all" rel="stylesheet" />
+<link rel="stylesheet" href="__STATIC__/editor/css/editormd.css" />
+<link rel="stylesheet" type="text/css" href="__STATIC__/fonts/iconfont.css">
+</head>
+<body>
+<div class="hbb">
+   <div class="show-left">
+        <div class="show-left-top">
+            <div class="show-left-top-search">
+               <form class="layui-form" action="">
+                  <input name="title" lay-verify="title" autocomplete="off" placeholder="请输入文件名" class="layui-input" type="text">
+                </form>
+            </div>
+        </div>
+        <div class="show-left-nav">
+            <ul class="layui-nav layui-nav-tree layui-inline" lay-filter="demo" style="margin-right: 10px;">
+            	{foreach name="cate" item="vo"}
+            	  {if condition="$vo['is_doc'] == 1"}
+            	{if condition="in_array($vo['id'] , $ids)"}
+			  	<li class="layui-nav-item layui-nav-itemed">
+			  	{else /}
+			  	<li class="layui-nav-item">
+			  	{/if}
+				    <a href="javascript:;"><i class="iconfont icon-wenjianjia" style="font-size:20px;margin-right:10px;"></i>  {$vo.name}</a>
+				    {if condition="!empty($vo['docs'])"}
+				    <dl class="layui-nav-child">
+				    	{foreach name="$vo['docs']" item="vv"}
+					      <dd  class="{$page_id == $vv['id'] ?'layui-this':''}"><a href="{:url('Share/index',['id'=>$id,'page_id'=>$vv['id']])}"><i class="iconfont" style="font-size:20px;margin-right:45px;"></i>{$vv.title}</a></dd>
+					     {/foreach}
+				    </dl>
+				    {/if}
+			  	</li>
+			  	{else /}
+			  	<li class="layui-nav-item layui-nav-item-one {$page_id == $vo['docs'][0]['id'] ?'layui-this':''}"><a href="{:url('Share/index',['id'=>$id,'page_id'=>$vo['docs'][0]['id']])}"><i class="iconfont" style="font-size:20px;margin-right:30px;"></i> {$vo['docs'][0]['title']}</a></li>
+			  	{/if}
+			  	{/foreach}
+			</ul>
+        </div>
+   </div>
+   <div class="show-right">
+       <div class="show-container">
+       	  <div class="show-header">
+              <div class="header-left"><i class="iconfont icon-more"></i></div>
+              <div class="clear"></div>
+       	  </div>
+          <div class="show-content">
+              <div id="test-editormd-view">
+				<h2 class="content-title">{$doc.title}</h2>      	            	
+                <textarea  name="test-editormd-markdown-doc" style="display:none">{$doc.content}</textarea> 
+              </div>
+          </div>
+       </div>         
+   </div>	
+</div>
+<script charset="utf-8" src="__STATIC__/layui/layui.js"></script> 
+<script src="https://cdn.bootcss.com/jquery/2.2.3/jquery.min.js"></script>
+<script src="__STATIC__/editor/lib/marked.min.js"></script>
+<script src="__STATIC__/editor/lib/prettify.min.js"></script>
+<script src="__STATIC__/editor/lib/raphael.min.js"></script>
+<script src="__STATIC__/editor/lib/underscore.min.js"></script>
+<script src="__STATIC__/editor/lib/sequence-diagram.min.js"></script>
+<script src="__STATIC__/editor/lib/flowchart.min.js"></script>
+<script src="__STATIC__/editor/lib/jquery.flowchart.min.js"></script>
+<script src="__STATIC__/editor/editormd.js"></script>    
+<script>
+	layui.use(['element','layer'], function(){
+	  var element = layui.element,
+	  layer = layui.layer
+	});
+ flag = true;
+  $('.icon-more').click(function(){
+     if(flag){
+        $('.show-left').animate({"width":"0px"})
+        $('.show-right').animate({"margin-left":"0"})
+        flag = false
+     }else{
+        $('.show-left').animate({"width":"350px"})
+        $('.show-right').animate({"margin-left":"350"})    
+        flag = true     
+     }
+     
+  })  
+$('.drop-down-hover').mouseenter(function(){
+	     data = $(this).attr('data-info');
+	     info = `data-info-`+data
+          $(".drop-down-target["+info+"]").show()
+  }).mouseleave(function(){
+  	   data = $(this).attr('data-info');
+	   info = `data-info-`+data
+       $(".drop-down-target["+info+"]").hide()
+  })
+
+$(".tips").hover(function(){
+    $('.tag-tips').css({
+            'top':'',
+            'right':'',
+            'left':''
+      }) 
+      $('.tag-tips').find('.tips-trin').removeClass("tips-trin-right") 
+      $('.tag-tips').find('.tips-trin').removeClass("tips-trin-left")        
+       tops = $(this).attr('tips-top')
+       left = $(this).attr('tips-left')
+       right = $(this).attr('tips-right')
+       info = $(this).data('info')
+       fx = $(this).attr('tips-fx');
+       $('.tag-tips').find('.tips-trin').addClass(fx)
+       if(left){
+          $('.tag-tips').css({
+            'top':tops,
+            'left':left
+          })
+       }else if(right){
+        $('.tag-tips').css({
+            'top':tops,
+            'right':right
+          })         
+       }
+       
+       $('.tag-tips').find('span').html(info)
+       $('.tag-tips').fadeIn()
+},function(){
+     $('.tag-tips').fadeOut()
+});
+testEditormdView2 = editormd.markdownToHTML("test-editormd-view", 
+   { htmlDecode : "style,script,iframe", // you can filter tags decode 
+    emoji : true, 
+   taskList : true, 
+   tex : true, // 默认不解析 
+   flowChart : true, // 默认不解析 
+   sequenceDiagram : true, // 默认不解析 
+});
+</script>
+</body>
+</html>

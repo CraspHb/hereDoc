@@ -1,0 +1,98 @@
+<html>
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0" name="viewport">
+<title>showDoc</title>
+<link href="__STATIC__/layui/css/layui.css" media="all" rel="stylesheet" />
+<link href="__STATIC__/fontAwesome/css/font-awesome.min.css" rel="stylesheet">
+<link href="__STATIC__/heredoc/css/user.css" rel="stylesheet">
+<link href="__STATIC__/heredoc/css/hbb.css" rel="stylesheet">
+</head>
+<script type="text/javascript">
+heredoc = "__STATIC__/heredoc/js/"
+itemDel_url = "{:url('Item/itemDel')}"
+</script>
+    <body>
+    	<style type="text/css">
+.hbb .hbb-container {
+    margin: 0px auto;
+    width: 1000px;
+}
+.hbb-footer {
+    background-color: #fff;
+}
+    </style>
+  <div class="hbb">
+     <div class="hbb-container">
+        <div class="top-nav">
+        	<div class="top-title">
+        		<a href="{:url('Index/index')}">
+                <img src="__STATIC__/heredoc/image/logo.png" class="layui-nav-img" />
+                <span>HereDocs</span>
+            </a>
+        	</div>
+        	<div class="nav-top">
+				<ul class="layui-nav"  style="text-align: right;">
+				  	<li class="layui-nav-item">
+				    	<a href="" class="re-msg">反馈</a>
+				  	</li>		  
+				</ul>                
+        	</div>
+        	<div class="clear"></div>
+        </div>  
+        </div>
+        </div> 	
+        <div class="content">
+            <div class="layui-container">
+                 <div class="user">
+                     <div class="layui-col-md3 user-left">
+                     	{include file="user/user_left" /}
+                     </div>
+                     <div class="layui-col-md9 user-right">
+	                       <div class="user-top">
+	                          <span class="user-title">我的项目</span>
+	                          <span class="user-stitle">所有个人创建的项目都在这</span>
+	                       </div>
+ 							<blockquote class="layui-elem-quote layui-text" style="margin:0px 25px;">
+                            你创建的项目都在这哟，快去创建更多的项目吧，如果有疑问，点击查看文档： <a href="/doc/base/faq.html#form" target="_blank">HereDoc使用说明</a>
+                        	</blockquote>	                       
+	                       <div class="user-bot">
+                               <div class="item">
+					             <ul class="">
+					                {foreach name="items" item="vo"}
+						                <li class="">
+						                  {if condition="$vo['url']"}
+						                  <a href="{:url('Cate/index',['url'=>$vo.url])}">
+						                  {else /}
+						                  <a href="{:url('Cate/index',['id'=>$vo.id])}">
+						                  {/if}
+						                        <div class="set-icon" data-id="{$vo.id}">
+						                           <i class="layui-icon layui-icon-share item-share" data-href="{:url('Share/index',['id'=>$vo['id']])}" data-domain="<?php echo request()->domain();?>"></i>
+						                           <i class="layui-icon layui-icon-set item-set" data-href="{:url('Item/set',['id'=>$vo['id']])}"></i>
+						                           <i class="layui-icon layui-icon-close item-del"></i>
+						                        </div>
+						                        <h6>{$vo.name}</h6>
+						                     </a>
+						                </li>
+						              {/foreach} 
+					             </ul>
+					         </div>         
+	                       </div>		
+                     </div>
+                     <div class="clear"></div>
+                 </div>
+            </div>
+        </div>
+        <div class="clear"></div> 
+    </body>
+      <div class="hbb-footer">
+      <p>© 2018 <a href="http://www.heredoc.com/" target="_blank">heredoc.com</a></p>
+      <p>
+        <span><a href="http://www.layui.com/admin/#get" target="_blank">关于heredoc</a></span>
+        <span><a href="http://www.layui.com/admin/pro/" target="_blank">github</a></span>
+        <span><a href="http://www.layui.com/admin/" target="_blank">文档</a></span>
+      </p>
+    </div>
+</html>
+<script type="text/javascript" src="__STATIC__/heredoc/js/jquery.form.js"></script>
+        <script type="text/javascript" src="__STATIC__/heredoc/js/heredoc.js"></script>  

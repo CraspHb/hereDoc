@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0" name="viewport">
+<title>hereDoc</title>
+<link href="__STATIC__/layui/css/layui.css" media="all" rel="stylesheet" />
+<link href="__STATIC__/heredoc/css/open.css" media="all" rel="stylesheet" />
+</head>
+<body>
+	<div class="open-html">
+		<div class="open-container">
+			<form class="layui-form layui-form-pane ajaxForm6" action="{:url('Item/itemAdd')}" method="post">
+				<div class="layui-form-item">
+	                <label class="lable-icon layui-icon layui-icon-diamond"></label>
+	                <input name="name" lay-verify="required" autocomplete="off" placeholder="请输入项目名称" class="layui-input" type="text">
+	            </div>
+				<div class="layui-form-item">
+	                <label class="lable-icon layui-icon layui-icon-diamond"></label>
+	                <input name="description" lay-verify="required" autocomplete="off" placeholder="请输入项目描述" class="layui-input" type="text">
+	            </div>	            
+				<div class="layui-form-item">
+	                <label class="lable-icon layui-icon layui-icon-diamond"></label>
+	                <input name="url" lay-verify="pass" autocomplete="off" placeholder="请输入个性域名(可选)" class="layui-input" type="text">
+	            </div>	            
+				<div class="layui-form-item">
+	                <label class="lable-icon layui-icon layui-icon-diamond"></label>
+	                <input name="password"  autocomplete="off" placeholder="请输入访问密码(不填表示没密码)" class="layui-input" type="password">
+	            </div>	
+	            <div class="layui-form-item">
+	                <label class="lable-icon layui-icon layui-icon-diamond"></label>
+	                <input name="sort" lay-verify="required" value="10" autocomplete="off" placeholder="排序" class="layui-input" type="text">
+	            </div>
+				<div class="layui-form-item">
+                     <button class="layui-btn layui-btn-fluid" lay-submit="" lay-filter="LAY-user-login-submit">提 交</button>
+                </div>	  
+				<div class="layui-form-item">
+                     <button class="layui-btn layui-btn-primary  layui-btn-fluid back"  lay-filter="LAY-user-login-submit">返 回</button>
+                </div>                                      
+			</form>				
+		</div>	
+	</div>
+        <script charset="utf-8" src="__STATIC__/layui/layui.js"></script>   
+        <script src="__STATIC__/editor/examples/js/jquery.min.js"></script> 
+        <script type="text/javascript" src="__STATIC__/heredoc/js/jquery.form.js"></script>
+        <script type="text/javascript" src="__STATIC__/heredoc/js/heredoc.js"></script>       
+        <script>
+            layui.use(['form', 'layedit', 'laydate'], function(){
+              var form = layui.form
+              ,layer = layui.layer
+            });
+            $('.back').click(function(){
+            	window.parent.location.reload();
+            	var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+				parent.layer.close(index);
+            })
+            
+  </script>
+</body>
+</html>

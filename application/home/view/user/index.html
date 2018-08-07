@@ -1,0 +1,86 @@
+<html>
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0" name="viewport">
+<title>showDoc</title>
+<link href="__STATIC__/layui/css/layui.css" media="all" rel="stylesheet" />
+<link href="__STATIC__/fontAwesome/css/font-awesome.min.css" rel="stylesheet">
+<link href="__STATIC__/heredoc/css/user.css" rel="stylesheet">
+<link href="__STATIC__/heredoc/css/hbb.css" rel="stylesheet">
+</head>
+    <body>
+    	<style type="text/css">
+.hbb .hbb-container {
+    margin: 0px auto;
+    width: 1000px;
+}
+.hbb-footer {
+    background-color: #fff;
+}
+    </style>
+  <div class="hbb">
+     <div class="hbb-container">
+        <div class="top-nav">
+        	<div class="top-title">
+        	<a href="{:url('Index/index')}">
+        		<img src="__STATIC__/heredoc/image/logo.png" class="layui-nav-img" />
+        		<span>HereDocs</span>
+        	</a>
+        	</div>
+        	<div class="nav-top">
+				<ul class="layui-nav"  style="text-align: right;">
+				  	<li class="layui-nav-item">
+				    	<a href="" class="re-msg">反馈</a>
+				  	</li>		  
+				</ul>                
+        	</div>
+        	<div class="clear"></div>
+        </div>  
+        </div>
+        </div> 	
+        <div class="content">
+            <div class="layui-container">
+                 <div class="user">
+                     <div class="layui-col-md3 user-left">
+                     	{include file="user/user_left" /}
+                     </div>
+                      <div class="layui-col-md9 user-right">
+	                       <div class="user-top">
+	                          <span class="user-title">我的主页</span>
+	                          <span class="user-stitle">记录所有的操作动态</span>
+	                       </div>
+	                       <div class="user-bot">
+	                       	{foreach name="dynamic" item="vo"}
+                               <div class="user-list">
+                                  <div class="layui-col-md8 user-title">
+                                  	{if condition="$vo.type == 1" /}
+                                  	<span class="img-sh">加</span>
+                                  	{elseif condition="$vo.type ==2" /}
+                                  	<span class="img-sh img-sh-c2">改</span>
+                                  	{elseif condition="$vo.type ==0" /}
+                                  	<span class="img-sh  img-sh-c3">删</span>
+                                  	{/if}
+                                  	  <a href="">{$vo.description}</a><span class="time">{$vo.addtime|date="Y-m-d H:i",###}</span> 
+                                  </div>
+                                  <div class="clear"></div>
+                               </div>
+                               {/foreach}         
+	                       </div>		
+                     </div>
+                     <div class="clear"></div>
+                 </div>
+            </div>
+        </div>
+        <div class="clear"></div> 
+    </body>
+      <div class="hbb-footer">
+      <p>© 2018 <a href="http://www.heredoc.com/" target="_blank">heredoc.com</a></p>
+      <p>
+        <span><a href="http://www.layui.com/admin/#get" target="_blank">关于heredoc</a></span>
+        <span><a href="http://www.layui.com/admin/pro/" target="_blank">github</a></span>
+        <span><a href="http://www.layui.com/admin/" target="_blank">文档</a></span>
+      </p>
+    </div>
+</html>
+<script type="text/javascript" src="__STATIC__/heredoc/js/jquery.form.js"></script>
+<script type="text/javascript" src="__STATIC__/heredoc/js/heredoc.js"></script>  

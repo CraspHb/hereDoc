@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0" name="viewport">
+<title>HereDoc</title>
+<link href="__STATIC__/layui/css/layui.css" media="all" rel="stylesheet" />
+<link rel="stylesheet" href="__STATIC__/editor/css/editormd.css" />
+<link href="__STATIC__/heredoc/css/hbb.css" media="all" rel="stylesheet" />
+<link href="__STATIC__/heredoc/css/api2.css" media="all" rel="stylesheet" />
+</head>
+<body>
+    	<div class="app">
+	 		<form class="layui-form  ajaxForm3" action="{:url('Docs/docsAdd')}" method="post">
+                <input type="hidden" name="itid" value="{$id}">
+	 			<div class="top-left">
+					<div class="layui-form-item">
+						<div class="layui-inline">
+						    <label class="layui-form-label">标题：</label>
+						    <div class="layui-input-block">
+						      <input name="title" lay-verify="required" autocomplete="off" placeholder="请输入标题" class="layui-input" type="text">
+						    </div>
+						</div>
+						<div class="layui-inline">
+						    <label class="layui-form-label">目录：</label>
+						    <div class="layui-input-block">
+						      <select name="cid" lay-filter="aihao">
+						        <option value="0">&nbsp;&nbsp;&nbsp;</option>
+                                {foreach name="cate" item="vo"}
+						        <option value="{$vo.id}">{$vo['level']|str_repeat="----",###}{$vo.name}</option>
+						        {/foreach}
+						      </select>
+						    </div>
+						  </div>
+						<div class="layui-inline">
+						    <label class="layui-form-label">序号：</label>
+						    <div class="layui-input-block">
+						      <input name="sort" lay-verify="title" autocomplete="off" value="10" class="layui-input" type="text">
+						    </div>
+						</div>				  
+					</div>
+				</div>
+				<div class="top-right">
+                   <button class="layui-btn layui-btn-primary"> 保存</button>
+                   <a class="layui-btn layui-btn-danger save-as-temp">保存为模板</a>
+   				   <a class="layui-btn" href="javascript:history.go(-1)">取消</a>
+				</div>
+				<div class="clear"></div>
+	        <div class="app-action">
+                <div class="action-left">
+                     <a class="layui-btn layui-btn-primary api-template-insert">插入API接口模板</a>
+                     <a class="layui-btn layui-btn-primary data-template-insert">插入数据字典模板</a>
+                     <a class="layui-btn layui-btn-primary more-temp">更多模板</a>
+                </div>
+				 <style type="text/css">
+                      .drop-down li{
+                         background: #fff;
+                         width:123px;
+                         cursor:pointer;
+                      }
+                      .drop-down li:hover{
+                          background: #e8f2ff;
+                          color:#409eff;
+                      }
+                      .drop-down-hover:hover{
+                         opacity: 1 !important;
+                      }
+                      .drop-down-hover{
+                        display: inline-block;
+                        height: 35px;
+                        line-height: 35px;
+                        padding: 0 18px;
+                        white-space: nowrap;
+                        text-align: center;
+                        font-size: 14px;
+                        border: none;
+                        border-radius: 2px;
+                        cursor: pointer;
+                        border: 1px solid #C9C9C9;
+                        background-color: #fff;
+                        color: #555;
+                      }
+                      .textarea-body{
+                            padding: 30px 20px;
+                            color: #606266;
+                            line-height: 24px;
+                            font-size: 14px;
+                        }
+                      textarea{
+                        display: block;
+                        resize: vertical;
+                        padding: 5px 15px;
+                        line-height: 1.5;
+                        box-sizing: border-box;
+                        width: 100%;
+                        font-size: inherit;
+                        color: #606266;
+                        background-color: #fff;
+                        border: 1px solid #dcdfe6;
+                        border-radius: 4px;
+                        transition: border-color .2s cubic-bezier(.645,.045,.355,1);                     
+                    }
+                    .textarea {
+                        display: inline-block;
+                        width: 100%;
+                        vertical-align: bottom;
+                        font-size: 14px;
+                        text-align:center;
+                    }
+                    .layui-layer-title {
+                        padding: 10px 80px 0 20px !important;
+                        border-bottom: none !important;
+                        font-size: 20px !important;
+                        background-color: #fff !important;
+                    }
+                    .data-content{
+                      margin:20px 10px;
+                    }
+            </style>
+                <div class="action-left">
+                    <a  class="drop-down-hover" style="position:relative;">JSON工具<i class="layui-icon layui-icon-down" style="margin-left:10px;"></i>
+                        <ul class="drop-down" style="position: absolute;z-index:100;left:0px;border:1px solid #c9c9c9;display:none">
+                           <li class="json-format">Json格式化</li>
+                           <li class="json-data">Json转数据表格</li>
+                        </ul>
+
+                    </a>
+                     
+                     <a class="layui-btn layui-btn-primary" href="{:url('Api/index')}">在线测试API</a>
+                     <a class="layui-btn layui-btn-primary api">在线API插入</a>
+                     <a class="layui-btn layui-btn-primary data-api">在线数据字典插入</a>
+                </div>   
+                <div class="clear"></div>             
+            </div>
+ 			<div id="test-editormd">
+                <textarea style="display:none;" class="editor" name="content">欢迎使用HereDoc
+                </textarea>
+            </div>       	
+    	</div>
+    	</form>
+    	<div class="api-template">欢迎使用HereDoc！
+
+    
+**简要描述：** 
+
+- 用户注册接口
+
+**请求URL：** 
+- ` http://xx.com/api/user/register `
+  
+**请求方式：**
+- POST 
+
+**参数：** 
+
+|参数名|必选|类型|说明|
+|:----    |:---|:----- |-----   |
+|username |是  |string |用户名   |
+|password |是  |string | 密码    |
+|name     |否  |string | 昵称    |
+
+ **返回示例**
+
+``` 
+  {
+    "error_code": 0,
+    "data": {
+      "uid": "1",
+      "username": "12154545",
+      "name": "吴系挂",
+      "groupid": 2 ,
+      "reg_time": "1436864169",
+      "last_login_time": "0",
+    }
+  }
+```
+
+ **返回参数说明** 
+
+|参数名|类型|说明|
+|:-----  |:-----|-----                           |
+|groupid |int   |用户组id，1：超级管理员；2：普通用户  |</div>
+<div class="data-template">
+- 用户表，储存用户信息
+
+|字段|类型|空|默认|注释|
+|:----    |:-------    |:--- |-- -|------      |
+|uid    |int(10)     |否 |  |             |
+|username |varchar(20) |否 |    |   用户名  |
+|password |varchar(50) |否   |    |   密码    |
+|name     |varchar(15) |是   |    |    昵称     |
+|reg_time |int(11)     |否   | 0  |   注册时间  |
+
+- 备注：无
+</div>
+        <script charset="utf-8" src="__STATIC__/layui/layui.js"></script>   
+        <script src="__STATIC__/editor/examples/js/jquery.min.js"></script> 
+        <script type="text/javascript" src="__STATIC__/heredoc/js/jquery.form.js"></script>
+        <script type="text/javascript" src="__STATIC__/heredoc/js/heredoc.js"></script>      
+        <script src="__STATIC__/editor/editormd.min.js"></script>
+         <script src="__STATIC__/heredoc/js/jsonFormat.js"></script> 
+         <script src="__STATIC__/heredoc/js/jsonToData.js"></script>           
+        <script>
+			 layui.use(['form', 'layedit', 'laydate','element'], function(){
+              var form = layui.form
+              ,element = layui.element
+              ,layer = layui.layer
+            });
+			var testEditor;
+            //在这里面输入任何合法的js语句
+      $('.json-format').click(function(){
+        layer.open({
+            type: 1 //Page层类型
+            ,area: ['600px', '400px']
+            ,title: 'Json格式化'
+            ,shade: 0.6 //遮罩透明度
+            ,maxmin: true //允许全屏最小化
+            ,anim: 1 //0-6的动画形式，-1不开启
+            ,content:  `<div class="textarea-body">
+                          <div class="textarea">
+                              <textarea type="textarea" class="jsonformat" placeholder="请粘贴一段json，程序将自动将json解析并生成参数表格。此功能适合用于快速编写API文档的返回参数表格..." rows="10" autocomplete="off" validateevent="true"  style="min-height: 33px;"></textarea>
+                          </div>
+                          <div class="button" style="float:right;margin:20px 10px;">
+                                 <button class="layui-btn layui-btn-primary jsformat-save">确定</button>
+                                 <button class="layui-btn js-close">取消</button>
+                          </div>
+                        </div>`
+          }); 
+      })
+      $('.json-data').click(function(){
+        layer.open({
+            type: 1 //Page层类型
+            ,area: ['600px', '400px']
+            ,title: 'Json转数据表格'
+            ,shade: 0.6 //遮罩透明度
+            ,maxmin: true //允许全屏最小化
+            ,anim: 1 //0-6的动画形式，-1不开启
+            ,content:  `<div class="textarea-body">
+                          <div class="textarea">
+                              <textarea type="textarea" class="jsondata" placeholder="请粘贴一段json，程序将自动将json解析并生成参数表格。此功能适合用于快速编写API文档的返回参数表格" rows="10" autocomplete="off" validateevent="true"  style="min-height: 33px;"></textarea>
+                          </div>
+                          <div class="button" style="float:right;margin:20px 10px;">
+                                 <button class="layui-btn layui-btn-primary jsdata-save">确定</button>
+                                 <button class="layui-btn js-close">取消</button>
+                          </div>
+                        </div>`
+          }); 
+      })   
+            $(function() {
+                $('.drop-down-hover').mouseenter(function(){
+                     $(this).find('.drop-down').slideDown(100)
+                }).mouseleave(function(){
+                     $(this).find('.drop-down').slideUp(100)
+                })                
+ 				// editormd.emoji     = {
+     //                path  : "http://www.emoji-cheat-sheet.com/graphics/emojis/",
+     //                ext   : ".png"
+     //            };
+       
+     //            editormd.twemoji = {
+     //                path : "http://twemoji.maxcdn.com/72x72/",
+     //                ext  : ".png"
+     //            };
+                          	
+                testEditor = editormd("test-editormd", {
+                    width   : "90%",
+                    height  : 750,
+                    syncScrolling : "single",
+                    taskList : true,
+                    sequenceDiagram : true,
+                    tex  : true,
+                    emoji : true,
+                    path    : "__PUBLIC__/static/editor/lib/",
+                    imageUpload    : true,
+                    imageFormats   : ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
+                    imageUploadURL : "{:url('Docs/uploadImg')}",
+                    onload : function() {
+				        var keyMap = {
+				            "Ctrl-S": function(cm) {
+				                $('.ajaxForm3').submit();
+				            },
+				        };
+				         this.addKeyMap(keyMap);
+				    }
+                });
+      $(document).on('click','.save-as-temp',function(){
+        layer.open({
+            type: 1 //Page层类型
+            ,area: ['300px', '200px']
+            ,title: '另存为模板'
+            ,shade: 0.6 //遮罩透明度
+            ,maxmin: true //允许全屏最小化
+            ,anim: 1 //0-6的动画形式，-1不开启
+            ,content:  `<div class="textarea-body">
+                          <div class="textarea">
+                              <input name="title" lay-verify="required" autocomplete="off" placeholder="请输入模板名称" class="layui-input" type="text">
+                          </div>
+                          <div class="button" style="float:right;margin:20px 10px;">
+                                 <button class="layui-btn layui-btn-primary temp-save">确定</button>
+                                 <button class="layui-btn js-close">取消</button>
+                          </div>
+                        </div>`
+          });  
+          return false;          
+      })   
+      $(document).on('click','.temp-save',function(){
+           title = $(this).parents('.textarea-body').find('input').val();
+           template = testEditor.getMarkdown()
+           if(!title || !template){
+              layer.msg('模板名称或者模板内容不能为空')
+           }
+           url = "{:url('Docs/docTemp')}"
+           $.post(url,{title:title,template:template},function(data){
+               if(data.code == '1'){
+                  layer.msg(data.msg,{icon: 1,time:1500},function(){
+                      window.location.reload();
+                 });
+               }else{
+                   layer.msg(data.msg,{icon: 2,time:1500});
+               }
+           },'json')
+      })  
+$(document).on('click','.more-temp',function(){
+     url = "{:url('Docs/ajaxGetTemp')}"
+     $.post(url,{},function(data){
+           layer.open({
+            type: 1 //Page层类型
+            ,area: ['700px', '400px']
+            ,title: '模板列表'
+            ,shade: 0.6 //遮罩透明度
+            ,maxmin: true //允许全屏最小化
+            ,anim: 1 //0-6的动画形式，-1不开启
+            ,content:  data
+          });  
+     },'json')
+          return false;          
+      })   
+      $(document).on('click','.temp-insert',function(){
+           id = $(this).data('id')
+           url = "{:url('Docs/tempGetContent')}"
+           $.post(url,{id:id},function(data){
+               testEditor.insertValue(data)
+               layer.closeAll();
+           },'json')
+      })  
+      $(document).on('click','.temp-del',function(){
+           id = $(this).data('id')
+           url = "{:url('Docs/tempDel')}"
+           that = $(this)
+           $.post(url,{id:id},function(data){
+               if(data.code == '1'){
+                  layer.msg(data.msg,{icon: 1,time:1500},function(){
+                       that.parents('tr').remove()
+                 });
+               }else{
+                   layer.msg(data.msg,{icon: 2,time:1500});
+               }
+           },'json')
+      })                    
+                $('.api-template-insert').click(function(){
+                    apiTemplate = $('.api-template').html();
+                    testEditor.insertValue(apiTemplate)
+                    return false;
+                })
+				$('.data-template-insert').click(function(){
+                    apiTemplate = $('.data-template').html();
+                    testEditor.insertValue(apiTemplate)
+                    return false;
+                })  
+                $(document).on('click','.jsformat-save',function(){
+                   var originalJson = $(this).parents('.textarea-body').find('textarea').val()
+                   var resultJson = formatJson(originalJson);
+                   if(resultJson){
+                        insert = "\n```";
+                        insert += resultJson;
+                        insert +="```\n";
+                        testEditor.insertValue(insert)
+                        layer.closeAll();
+                   }
+              })  
+            var json_table_data, t, instru, remark;
+            $(document).on('click','.jsdata-save',function(){
+                   var json = $(this).parents('.textarea-body').find('textarea').val()
+                      try {
+                          json_table_data = '\n| 参数名 | 类型 | 说明 | 备注 |\n' +
+                              '|:-------|:-------|:-------|:-------|\n';
+                          t = 2;
+                          result = change(JSON.parse(json) , t , json_table_data);
+                          testEditor.insertValue(result)
+                          layer.closeAll();                          
+                      } catch (e) {
+                          layer.msg("json格式不正确",{icon: 2,time:1000},function(){
+                             layer.closeAll();
+                         }); 
+                      }
+              }) 
+              $(document).on('click','.js-close',function(){
+                    layer.closeAll();
+              })   
+              $('.api').click(function(){
+              	layui.use(['form', 'layedit', 'laydate'], function(){
+            			  var form = layui.form
+            			  ,layer = layui.layer
+            			});
+                    layer.open({
+                        type: 1 //Page层类型
+                        ,area: ['700px', '550px']
+                        ,title: '在线Api插入'
+                        ,shade: 0.6 //遮罩透明度
+                        ,maxmin: true //允许全屏最小化
+                        ,anim: 1 //0-6的动画形式，-1不开启
+                        ,content:  `<div class="api-content">
+                                        <div class="form-container">
+                                             <h2 class="title">
+                                                Request
+                                             </h2>
+                                             <form class="layui-form left-form ajaxForm7" action="{:url('Api/apiRun')}" method="post">
+                                                    <div class="layui-form-item">
+                                                    <a class="layui-btn change-post layui-btn-primary drop-down-hover-api"><span>GET</span> <i class="layui-icon layui-icon-triangle-d"></i>
+                                                       <input type="hidden" name="method" value="get">                              
+                                                    </a>
+                                                    <ul class="drop-down-api">
+                                                       <li class="method">POST</li>
+                                                       <li class="method">GET</li>
+                                                    </ul>                                   
+                                                    <input name="url" lay-verify="title" autocomplete="off" placeholder="https://getman.cn/echo" class="layui-input" type="text">
+                                                    <button class="layui-btn submit-post"><i class="layui-icon layui-icon-release" style="margin-left:-7px;"></i></button>
+                                                </div>  
+                                                <div class="layui-form-item">
+                                                     <div class="layui-tab layui-tab-card">
+                                                      <ul class="layui-tab-title">
+                                                        <li class="layui-this">Params</li>
+                                                        <li>Header</li>
+                                                        <li>Cookie</li>
+                                                      </ul>
+                                                      <div class="layui-tab-content">
+                                                        <div class="layui-tab-item layui-show">
+                                                               <textarea id="txt_request_body" name="params" class="form-control request_text" placeholder="key1: value1,&#10;key2: value2," style="display: block;"></textarea>
+                                                        </div>
+                                                        <div class="layui-tab-item">
+                                                                <textarea id="txt_request_body2" name="header" class="form-control request_text" placeholder="key1: value1,&#10;key2: value2," style="display: block;"></textarea>
+                                                        </div>
+                                                        <div class="layui-tab-item">
+                                                            <textarea id="txt_request_body3" name="cookie" class="form-control request_text" placeholder="key1: value1,&#10;key2: value2," style="display: block;"></textarea>
+                                                        </div>
+                                                      </div>
+                                                    </div>
+                                                </div>  
+                                                <div class="layui-form-item">
+                                                     <a href="" style="color:#409eff">重置</a>
+                                                </div>                
+                                             </form>
+                                         </div>
+                                   </div>`
+                      }); 
+						element.init()
+                   return false;
+              })
+$('.data-api').click(function(){
+                    layer.open({
+                        type: 1 //Page层类型
+                        ,area: ['700px', '550px']
+                        ,title: '数据字典生成'
+                        ,shade: 0.6 //遮罩透明度
+                        ,maxmin: true //允许全屏最小化
+                        ,anim: 1 //0-6的动画形式，-1不开启
+                        ,content:  ` <div class="data-content">
+                          <form class="layui-form data-form dataInsert" action="{:url('Docs/dataApi')}" method="post">
+                            <div class="layui-form-item">
+                              <label class="layui-form-label">数据库服务器：</label>
+                              <div class="layui-input-inline">
+                                <input type="text" name="hostname" required  lay-verify="required" placeholder="请输入数据库服务器地址" autocomplete="off" class="layui-input">
+                              </div>
+                               <div class="layui-form-mid layui-word-aux"><i class="layui-icon layui-icon-about"></i>数据库服务器地址，一般为127.0.0.1或localhost</div>
+                            </div>
+                            <div class="layui-form-item">
+                              <label class="layui-form-label">数据库端口：</label>
+                              <div class="layui-input-inline">
+                                <input type="text" name="port" required  lay-verify="required" placeholder="请输入数据库服务器端口" value="3306" autocomplete="off" class="layui-input">
+                              </div>
+                               <div class="layui-form-mid layui-word-aux"><i class="layui-icon layui-icon-about"></i>数据库服务器端口，一般为3306</div>
+                            </div>
+                            <div class="layui-form-item">
+                              <label class="layui-form-label">数据库用户名：</label>
+                              <div class="layui-input-inline">
+                                <input type="text" name="username" required  lay-verify="required" placeholder="请输入数据库用户名" autocomplete="off" class="layui-input">
+                              </div>
+                            </div>
+                            <div class="layui-form-item">
+                              <label class="layui-form-label">数据库密码：</label>
+                              <div class="layui-input-inline">
+                                <input type="text" name="password" required  lay-verify="required" placeholder="请输入数据库密码" autocomplete="off" class="layui-input">
+                              </div>
+                              <div class="layui-form-mid layui-word-aux"><a class="layui-btn layui-btn-xs test-db">测试连接</a></div>
+                            </div>
+                            <div class="layui-form-item">
+                              <label class="layui-form-label">数据库名：</label>
+                              <div class="layui-input-inline">
+                                <input type="text" name="database" required  lay-verify="required" placeholder="请输入数据库名" autocomplete="off" class="layui-input">
+                              </div>
+                            </div>
+                            <div class="button" style="float:left;margin:20px 50px;">
+                                 <button class="layui-btn layui-btn-primary" layer-submit>确定</button>
+                                 <button class="layui-btn js-close">取消</button>
+                          </div>                            
+                          </form>
+                           </div>`
+                      }); 
+                   return false;
+              }) 
+        $(document).on('click','.test-db',function(){
+             form = $(this).parents('form')
+             hostname = form.find('input[name=hostname]').val()
+             port = form.find('input[name=port]').val()
+             username = form.find('input[name=username]').val()
+             password = form.find('input[name=password]').val()
+             database = form.find('input[name=database]').val()
+             if(!hostname){
+                 layer.msg('数据库服务器地址不能为空')
+                 return false;
+             }
+             if(!port){
+                 layer.msg('数据库服务器端口号不能为空')
+                 return false;
+             }             
+             if(!username){
+                 layer.msg('数据库用户名不能为空')
+                 return false;
+             }             
+             if(!password){
+                 layer.msg('数据库密码不能为空')
+                 return false;
+             }             
+             if(!database){
+                 layer.msg('数据库名不能为空')
+                 return false;
+             }
+             url = "{:url('Docs/dataApiTest')}"
+             $.post(url,{hostname:hostname,port:port,username:username,password:password,database:database},function(data){
+                     if(data.code = 1){
+                        layer.msg(data.msg,{icon:1})
+                     }else{
+                         layer.msg(data.msg,{icon:3})
+                     }
+             },'json')             
+        })               
+        method = true;
+        $(document).on('click','.drop-down-hover-api',function(){
+            if(method){
+                $('.drop-down-api').slideDown(100)
+                method = false
+            }else{
+                $('.drop-down-api').slideUp(100)
+                method = true
+            }
+        })
+        $(document).on('click','.method',function(){
+             html = $(this).html()
+             $(this).parents('.layui-form-item').find('.drop-down-hover-api').find('span').html(html)
+             $('.drop-down-hover-api').find('input').val(html)
+             $('.drop-down-api').slideUp(100)
+              method = true
+        }) 
+        $(document).on('submit','.ajaxForm7',function(){
+             post = $(this).serialize()
+             url = "{:url('Api/apiRun')}";
+             $.post(url,post,function(data){
+                if(data.code == '1'){
+                       resultJson = formatJson(data.data.json);
+                       markdown = data.data.markdown
+                       markdown += resultJson
+                       markdown += "```\r\n\r\n **返回参数说明** \r\n\r\n "
+                       testEditor.insertValue(markdown)
+                       layer.closeAll();
+                    }else{
+                      layer.msg(data.msg,{icon: 2,time:2000});
+                    }
+             },'json')
+             return false;
+        }) 
+        $(document).on('submit','.dataInsert',function(){
+             post = $(this).serialize()
+             url = "{:url('Docs/dataApi')}";
+             $.post(url,post,function(data){
+                if(data.code == '1'){
+                       testEditor.insertValue(data.data)
+                       layer.closeAll();
+                    }else{
+                      layer.msg(data.msg,{icon: 2,time:2000});
+                    }
+             },'json')
+             return false;
+        })                                                            
+            });			
+		</script>
+    </body>
+</html>

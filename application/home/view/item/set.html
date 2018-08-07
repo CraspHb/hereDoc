@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0" name="viewport">
+<title>HereDoc</title>
+<link href="__STATIC__/layui/css/layui.css" media="all" rel="stylesheet" />
+<link href="__STATIC__/heredoc/css/cate.css" media="all" rel="stylesheet" />
+<link href="__STATIC__/heredoc/css/show.css" media="all" rel="stylesheet" />
+</head>
+<body>
+<div class="app">
+    <div class="app-container">
+       	<div class="top" style="z-index:2002">
+       		<a href="javascript:history.go(-1)" style="float:right;z-index:2002">返回</a>
+       	</div>
+       	<div class="content" style="margin-top:50px;">
+				<div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+				  <ul class="layui-tab-title">
+				    <li class="layui-this">基础设置</li>
+				    <li>成员管理</li>
+				    <li>高级设置</li>
+				  </ul>
+				  <div class="layui-tab-content" style="height: 100px;margin:25px auto;">
+				    <div class="layui-tab-item layui-show" style="text-align:center;width:400px;margin:25px auto;">
+						<form class="layui-form ajaxForm6" action="{:url('Item/itemEdit')}" method="post">
+							<input type="hidden" name="id" value="{$item.id}">
+							<div class="layui-form-item">
+							    <label class="layui-form-label">项目名称：</label>
+							    <div class="layui-input-block">
+							      <input name="name" lay-verify="required" autocomplete="off" value="{$item.name}"  placeholder="请输入项目名称" class="layui-input " type="text">
+							    </div>
+							  </div>
+							<div class="layui-form-item">
+							    <label class="layui-form-label">项目描述：</label>
+							    <div class="layui-input-block">
+							      <input name="description" lay-verify="required" autocomplete="off" value="{$item.description}" placeholder="请输入项目描述" class="layui-input" type="text">
+							    </div>
+							  </div>	            
+							<div class="layui-form-item">
+							    <label class="layui-form-label">个性域名：</label>
+							    <div class="layui-input-block">
+							      <input name="url" lay-verify="pass" autocomplete="off" value="{$item.url}"  placeholder="请输入个性域名(可选)" class="layui-input" type="text">
+							    </div>
+							  </div>            
+							<div class="layui-form-item">
+							    <label class="layui-form-label">访问密码：</label>
+							    <div class="layui-input-block">
+							      <input name="password"  autocomplete="off" value="{$item.password}"  placeholder="请输入访问密码(不填表示没密码)" class="layui-input" type="password">
+							    </div>
+							  </div>	
+							  <div style="width: 216px; margin: 40px auto;">
+							      <button class="layui-btn layui-btn-fluid">提交</button>
+							    </div> 
+				          </form>                              
+				    </div>
+				    <div class="layui-tab-item">
+                        <div class="top " style="margin:0px">
+				       		<a href="javascript:void(0)" class="add-person">添加成员</a>
+				       	</div>
+				<table class="layui-table">
+				 <!--  <colgroup>
+				    <col>
+				    <col>
+				    <col>
+				  </colgroup> -->
+				  <thead>
+				    <tr>
+				      <th>用户名</th>
+				      <th>添加时间</th>
+				      <th>权限</th>
+				      <th>删除</th>
+				    </tr> 
+				  </thead>
+				  <tbody>
+				  	{foreach name="members" item="vo"}
+				    <tr>
+				      <td>{$vo.username}</td>
+				      <td>{$vo.addtime|date="Y-m-d H:i",###}</td>
+				      <td>{$vo.readonly == 1 ? "只读":"编辑"}</td>
+				      <td>
+       					<a href="{:url('Item/membersDel')}" class="cz deleteTr" data-id="{$vo.id}">删除</a>                         
+				      </td>
+				    </tr>
+			        {/foreach}
+				  </tbody>
+				</table>				       	
+				    </div>
+				    <div class="layui-tab-item">
+				    	   <div style="width: 216px; margin: 40px auto;">
+						      <!-- layui 2.2.5 新增 -->
+						      <button class="layui-btn layui-btn-primary layui-btn-fluid tips" tips-top="155px" tips-left="70px" tips-fx="tips-trin-left" data-info="你可以讲项目转让给其他人">转让</button>
+						    </div>
+							<div style="width: 216px; margin: 40px auto;">
+						      <!-- layui 2.2.5 新增 -->
+						      <button class="layui-btn layui-btn-primary  layui-btn-fluid tips" tips-top="245px" tips-left="70px" tips-fx="tips-trin-left" data-info=" 归档项目后，项目将无法再新增和修改内容，并且无法取消归档状态。 如想再次修改内容，可复制本项目，在新的项目基础上修改">归档</button>
+						    </div>						    
+							<div style="width: 216px; margin: 40px auto;">
+						      <!-- layui 2.2.5 新增 -->
+						      <button class="layui-btn  layui-btn-primary layui-btn-fluid tips" tips-top="305px" tips-left="70px" tips-fx="tips-trin-left" data-info="删除后将不可恢复！">删除</button>
+						    </div>	
+						<div class="tag-tips">
+				           <span>复制项目</span>
+				           <div class="tips-trin"></div>
+				     	 </div> 						    					    
+				    </div>
+				  </div>
+				</div>
+	    </div>       		  
+    </div>
+</div>
+   <style type="text/css">
+        .add{
+        	position:absolute;
+        	width:320px;
+        	left:50%;
+        	top:50%;
+        	-webkit-transform: translate(-50%,-50%);
+			transform: translate(-50%,-50%);
+        }
+        .form-container{
+          margin:15px 20px;
+        }
+        .lable-title{
+        	display:inline-block;
+        	padding:5px 0px;
+        }
+</style>
+<script charset="utf-8" src="__STATIC__/layui/layui.js"></script> 
+<script src="__STATIC__/editor/examples/js/jquery.min.js"></script>  
+<script type="text/javascript" src="__STATIC__/heredoc/js/jquery.form.js"></script>
+<script type="text/javascript" src="__STATIC__/heredoc/js/heredoc.js"></script>       
+        <script>
+            layui.use(['form', 'layedit', 'laydate','element'], function(){
+              var form = layui.form
+              ,layer = layui.layer
+              ,element = layui.element
+            });
+          $(document).on('click','.add-person',function(){  
+              url =  "{:url('Item/memberAdd')}"  
+              id = "{$item['id']}"   	
+              layer.open({
+				  type: 1,
+				  skin: 'layui-layer-rim', //加上边框
+				  area: ['340px', '400px'], //宽高
+				  title: false,
+				  content: `<div class="add">
+   	   <div class="form-container">
+   	   	    <form class="layui-form  ajaxForm3" action="`+url+`" method="post">
+   	   	    <input type="hidden" name="id" value="`+id+`" />
+		   	  <div class="layui-form-item">
+			      <input type="text" name="username" required  lay-verify="required" placeholder="请输入用户名或者邮箱" autocomplete="off" class="layui-input">
+			  </div>
+				    <div class="layui-form-item" pane="">
+				      <input name="readonly" lay-skin="primary" title="只读"  type="checkbox">
+				    </div>
+				  <div class="layui-form-item" pane="">
+				  <span style="color:#606266;font-size:12px;display:inline-block;margin:10px;line-height:24px;">权限说明：默认成员可以新建/编辑项目页面，删除时将只能删除自己新建/编辑的页面。 勾选只读属性后，该成员对所有页面都只能查看，无法新增/编辑/删除 </span>
+				  </div>
+				    <div style="width: 216px; margin: 40px auto;">
+				      <button class="layui-btn layui-btn-fluid" lay-submit>添加</button>
+				    </div> 
+	   		</form>
+   	   </div>
+   </div>`
+			  });
+			  layui.use('form', function(){
+				   var form = layui.form;
+				   form.render();
+				  });
+            })
+			$(document).on('submit','.ajaxForm3',function(){
+            	 data = $(this).serialize()
+            	 url = $(this).attr('action')
+            	 $.post(url,data,function(data){
+            	 	if(data.code == '1'){
+			           layer.msg(data.msg,{icon: 1,time:1500},function(){
+			           	   window.location.href = data.url;
+			           });
+			        }else{
+			        	layer.msg(data.msg,{icon: 2,time:1500});
+			        	
+			        }
+            	 },'json')
+            	 return false; 
+
+            })                  
+             $(".tips").hover(function(){
+             	if (!$('.tag-tips').is(':animated')) { 
+				    $('.tag-tips').css({
+				            'top':'',
+				            'right':'',
+				            'left':''
+				      }) 
+				      $('.tag-tips').find('.tips-trin').removeClass("tips-trin-right") 
+				      $('.tag-tips').find('.tips-trin').removeClass("tips-trin-left")        
+				       tops = $(this).attr('tips-top')
+				       left = $(this).attr('tips-left')
+				       right = $(this).attr('tips-right')
+				       info = $(this).data('info')
+				       fx = $(this).attr('tips-fx');
+				       $('.tag-tips').find('.tips-trin').addClass(fx)
+				       if(left){
+				          $('.tag-tips').css({
+				            'top':tops,
+				            'left':left
+				          })
+				       }else if(right){
+				        $('.tag-tips').css({
+				            'top':tops,
+				            'right':right
+				          })         
+				       }
+				       
+				       $('.tag-tips').find('span').html(info)
+				       $('.tag-tips').fadeIn()
+				   }
+			},function(){
+			     $('.tag-tips').hide()
+			}); 
+  </script>   
+</body>
+</html>

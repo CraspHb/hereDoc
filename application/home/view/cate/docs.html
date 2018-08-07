@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0" name="viewport">
+<title>HereDoc</title>
+<link href="__STATIC__/layui/css/layui.css" media="all" rel="stylesheet" />
+<link href="__STATIC__/heredoc/css/cate.css" media="all" rel="stylesheet" />
+</head>
+<body>
+   <div class="app">
+       <div class="app-container">
+       	<div class="top">
+       		<a href="javascript:void(0)" class="add-cate" data-id="" data-itid="{$id}">添加目录</a>
+       		<a href="javascript:history.go(-1)">返回</a>
+       	</div>
+              <table class="layui-table">
+				  <thead>
+				    <tr>
+				      <th>目录名称</th>
+				      <th>添加时间</th>
+				      <th>排序</th>
+				      <th>操作</th>
+				    </tr> 
+				  </thead>
+				  <tbody>
+				   {foreach name="cate" item="vo"}
+				    <tr>
+				      <td>{$vo['level']|str_repeat="----",###}{$vo.name}</td>
+				      <td>{$vo.addtime|date="Y-m-d",###}</td>
+				      <td>{$vo.sort}</td>
+				      <td>
+						<a href="javascript:void(0)" class="add-cate" data-id="{$vo.id}"  data-itid="{$id}">编辑</a>
+       					<a href="{:url('Cate/del')}" class="cz deleteTr" data-id="{$vo.id}">删除</a>                         
+				      </td>
+				    </tr>
+				    {/foreach}	    
+				  </tbody>
+				</table>
+       </div>
+   </div>
+   <style type="text/css">
+        .add{
+        	position:absolute;
+        	width:320px;
+        	left:50%;
+        	top:50%;
+        	-webkit-transform: translate(-50%,-50%);
+			transform: translate(-50%,-50%);
+        }
+        .form-container{
+          margin:15px 20px;
+        }
+        .lable-title{
+        	display:inline-block;
+        	padding:5px 0px;
+        }
+</style>
+<script charset="utf-8" src="__STATIC__/layui/layui.js"></script> 
+<script src="__STATIC__/editor/examples/js/jquery.min.js"></script>  
+<script type="text/javascript" src="__STATIC__/heredoc/js/jquery.form.js"></script>
+<script type="text/javascript" src="__STATIC__/heredoc/js/heredoc.js"></script>       
+        <script>
+            layui.use(['form', 'layedit', 'laydate'], function(){
+              var form = layui.form
+              ,layer = layui.layer
+            });
+			$(document).on('click','.add-cate',function(){
+          	 url = "{:url('Cate/ajaxGetCate')}"
+          	 id = $(this).data('id')
+          	 itid = $(this).data('itid')
+             $.post(url,{id:id,itid:itid},function(data){
+	                layer.open({
+					  type: 1,
+					  skin: 'layui-layer-rim', //加上边框
+					  area: ['340px', '400px'], //宽高
+					  title: false,
+					  content: data
+				  });
+				  layui.use('form', function(){
+					   var form = layui.form;
+					   form.render();
+					  });
+
+             },'json')           	
+              
+            }) 
+            $(document).on('submit','.ajaxForm3',function(){
+            	 data = $(this).serialize()
+            	 url = $(this).attr('action')
+            	 $.post(url,data,function(data){
+            	 	if(data.code == '1'){
+			           layer.msg(data.msg,{icon: 1,time:1500},function(){
+			           	   window.location.href = data.url;
+			           });
+			        }else{
+			        	layer.msg(data.msg,{icon: 2,time:1500});
+			        	
+			        }
+            	 },'json')
+            	 return false; 
+            })        
+              
+  </script>   
+</body>
+</html>

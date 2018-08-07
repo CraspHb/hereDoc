@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>diff</title>
+</head>
+<script src="__STATIC__/editor/examples/js/jquery.min.js"></script> 
+<link rel="stylesheet" href="__STATIC__/diff/diffview.css" />
+<script charset="utf-8" src="__STATIC__/diff/diffview.js"></script> 
+<script charset="utf-8" src="__STATIC__/diff/difflib.js"></script>    
+<style type="text/css">
+.body{
+	size:12px;
+}
+.content{
+	width:80%;
+	margin:0 auto;
+	font-size:12px;
+
+}
+#diffoutput .diff{
+	margin:0 auto;
+}
+</style>
+<body>
+	<span id="baseText" style="display:none" >{$base}</span>
+	<span id="newText"  style="display:none">{$newtxt}</span>
+	<div class="content">
+			<a href="javascript:history.go(-1)" style="color:#409eff;display:inline-block;float:right;margin:15px 0px;">返回</a>
+			<div id="diffoutput"> </div>
+	</div>
+    
+</body>
+</html>
+<script type="text/javascript">
+
+     base = difflib.stringAsLines(document.getElementById("baseText").innerHTML)
+	newtxt = difflib.stringAsLines(document.getElementById("newText").innerHTML)
+	sm = new difflib.SequenceMatcher(base, newtxt)
+	opcodes = sm.get_opcodes()
+	diffoutputdiv = document.getElementById("diffoutput")
+
+	diffoutputdiv.appendChild(diffview.buildView({
+		baseTextLines: base,
+		newTextLines: newtxt,
+		opcodes: opcodes,
+		baseTextName: "当前版本",
+		newTextName: "历史版本",
+		contextSize: null,
+		viewType: 0
+	}));
+</script>

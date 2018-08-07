@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0" name="viewport">
+<title>api</title>
+<link href="__STATIC__/layui/css/layui.css" media="all" rel="stylesheet" />
+<link href="__STATIC__/heredoc/css/api.css" media="all" rel="stylesheet" />
+</head>
+<body>
+  <div class="top">
+	  <div class="layui-row">
+	    <div class="layui-col-md10">
+	        <h1 class="title">
+                RunApi <small>一个在线测试api的工具</small>
+             </h1>
+	    </div>
+	    <div class="layui-col-md2">
+	      <a href="">收藏工具</a>
+	      <a href="">帮助说明</a>
+	    </div>
+	    <div class="clear"></div>
+	</div>
+  </div>
+  <div class="content">
+    
+       	     <div class="layui-row">
+			    <div class="layui-col-md5">
+			    	<div class="form-container">
+			    		 <h2 class="title">
+			                Request
+			             </h2>
+				    	 <form class="layui-form left-form ajaxForm7" action="{:url('Api/apiRun')}" method="post">
+		 					<div class="layui-form-item">
+		                        <a class="layui-btn change-post layui-btn-primary drop-down-hover"><span>GET</span> <i class="layui-icon layui-icon-triangle-d"></i>
+				                   <input type="hidden" name="method" value="get">                              
+		                        </a>
+								<ul class="drop-down">
+		                           <li class="method">POST</li>
+		                           <li class="method">GET</li>
+		                        </ul>   		                        
+		                        <input name="url"  autocomplete="off" placeholder="https://getman.cn/echo" class="layui-input" type="text">
+		                        <button class="layui-btn submit-post"><i class="layui-icon layui-icon-release" style="margin-left:-7px;"></i></button>
+		                    </div>	
+		                    <div class="layui-form-item">
+                                 <div class="layui-tab layui-tab-card">
+								  <ul class="layui-tab-title">
+								    <li class="layui-this">Params</li>
+								    <li>Header</li>
+								    <li>Cookie</li>
+								  </ul>
+								  <div class="layui-tab-content">
+								    <div class="layui-tab-item layui-show">
+                                           <textarea id="txt_request_body" name="params" class="form-control request_text" placeholder="key1: value1,&#10;key2: value2," style="display: block;"></textarea>
+								    </div>
+								    <div class="layui-tab-item">
+                                            <textarea id="txt_request_body2" name="header" class="form-control request_text" placeholder="key1: value1,&#10;key2: value2," style="display: block;"></textarea>
+								    </div>
+								    <div class="layui-tab-item">
+								    	<textarea id="txt_request_body3" name="cookie" class="form-control request_text" placeholder="key1: value1,&#10;key2: value2," style="display: block;"></textarea>
+								    </div>
+								  </div>
+								</div>
+		                    </div>	
+		                    <div class="layui-form-item">
+		                    	 <a href="" style="color:#409eff">重置</a>
+		                    </div>	    	 	  
+				    	 </form>
+			    	 </div>
+			    </div>
+			    <div class="layui-col-md7">
+			         <div class="result">
+						<h2 class="title">
+			                Response
+			             </h2>			         	
+                           <div class="layui-tab layui-tab-card">
+							  <ul class="layui-tab-title">
+							    <li class="layui-this">返回结果</li>
+							    <li>MARKDOWN</li>
+							    <li style="position:absolute;right:0px;font-size:10px;color:#409eff">复制结果</li>
+							  </ul>
+							  <div class="layui-tab-content">
+							    <div class="layui-tab-item layui-show">
+		                               <textarea id="txt_request_body4" class="form-control response-json" placeholder="key1: value1,key2: value2" style="display: block;height:500px;"></textarea>
+							    </div>
+							    <div class="layui-tab-item">
+		                                <textarea id="txt_request_body5" class="form-control response-markdown" placeholder="key1: value1,key2: value2" style="display: block;height:500px;"></textarea>
+							    </div>
+							  </div>
+							</div>
+			         </div>
+			    </div>
+       </div>
+  </div>
+</body>
+</html>
+<script charset="utf-8" src="__STATIC__/layui/layui.js"></script> 
+<script src="__STATIC__/editor/examples/js/jquery.min.js"></script> 
+<script src="__STATIC__/heredoc/js/jsonFormat.js"></script> 
+<script type="text/javascript" src="__STATIC__/heredoc/js/jquery.form.js"></script>
+<script type="text/javascript" src="__STATIC__/heredoc/js/heredoc.js"></script>   
+
+<script type="text/javascript">
+		layui.use(['element','layer'], function(){
+	  var element = layui.element,
+	  layer = layui.layer
+	});
+    method = true;
+    $('.drop-down-hover').click(function(){
+    	if(method){
+    		$('.drop-down').slideDown(100)
+    		method = false
+    	}else{
+    		$('.drop-down').slideUp(100)
+    		method = true
+    	}
+    })
+    $('.method').click(function(){
+    	 html = $(this).html()
+    	 $(this).parents('.layui-form-item').find('.drop-down-hover').find('input').val(html)
+    	 $('.drop-down-hover').find('span').html(html)
+    	 $('.drop-down').slideUp(100)
+    	  method = true
+    })
+</script>
